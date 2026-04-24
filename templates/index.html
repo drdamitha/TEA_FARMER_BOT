@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tea Farmer Assistant Bot</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<div class="chat-container">
+    <h1>🍃 Tea Farmer Assistant Bot</h1>
+    <p class="subtitle">Fertilizer advice • Disease alerts • Weather guidance • Market prices</p>
+
+    <div id="chat-box" class="chat-box">
+        <div class="bot-message">
+            Hello! I am your Tea Farmer Assistant Bot. How can I help you today?
+        </div>
+    </div>
+
+    <div class="input-area">
+        <input type="text" id="user-input" placeholder="Ask about tea farming...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+<script>
+function addMessage(message, className) {
+    const chatBox = document.getElementById("chat-box");
+    const msg = document.createElement("div");
+    msg.className = className;
+    msg.innerText = message;
+    chatBox.appendChild(msg);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function sendMessage() {
+    const input = document.getElementById("user-input");
+    const message = input.value.trim();
+
+    if (message === "") {
+        return;
+    }
+
+    addMessage(message, "user-message");
+    input.value = "";
+
+    fetch("/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({message: message})
+    })
+    .then(response => response.json())
+    .then(data => {
+        addMessage(data.response, "bot-message");
+    });
+}
+
+document.getElementById("user-input").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        sendMessage();
+    }
+});
+</script>
+
+</body>
+</html>
