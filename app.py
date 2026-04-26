@@ -8,7 +8,12 @@ last_unknown_question = None
 
 
 @app.route("/")
-def home():
+def landing_page():
+    return render_template("home.html")
+
+
+@app.route("/chatbot")
+def chatbot_page():
     return render_template("index.html")
 
 
